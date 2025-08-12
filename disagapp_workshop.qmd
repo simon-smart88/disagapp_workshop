@@ -1,0 +1,306 @@
+---
+title: "Disagapp Workshop"
+author: "Simon Smart"
+embed-resources: true
+format:
+  revealjs: 
+    theme: [default, custom.scss]
+---
+
+## Welcome
+
+- Simon Smart - developer of Disagapp
+- Tim Lucas - maintainer of disaggregation R package
+
+- Please 'raise a hand' if you have any questions and we will address them
+
+## Overview
+
+- Introduction to disaggregation regression
+- Walkthrough of the functionality of Disagapp
+- Use the app to run an example analysis
+- Use your own data
+
+## Disaggregation regression {.icons .smalltext}
+::: columns
+::: {.column width="65%"}
+- {{< fa draw-polygon >}} Disaggregation regression can be used to fit models when the response variable exists as areal data (aggregated into polygons) but the covariates exist as pixels. 
+- {{< fa globe >}} Useful for generating high resolution maps of disease, especially where incidence might be affected by environmental factors.
+- {{< fa road-barrier >}} High barrier for entry (R user, manipulating spatial data) may limit the uptake for potential users in the real world.
+::: 
+::: {.column width="35%"}
+```{=html}
+<img src="images/mad_shape.png" width = "400px" height = "600px">
+```
+:::
+:::
+
+## Disaggregation regression {.icons .smalltext}
+::: columns
+::: {.column width="65%"}
+- {{< fa draw-polygon >}} Disaggregation regression can be used to fit models when the response variable exists as areal data (aggregated into polygons) but the covariates exist as pixels. 
+- {{< fa globe >}} Useful for generating high resolution maps of disease, especially where incidence might be affected by environmental factors.
+- {{< fa road-barrier >}} High barrier for entry (R user, manipulating spatial data) may limit the uptake for potential users in the real world.
+::: 
+::: {.column width="35%"}
+```{=html}
+<img src="images/mad_pred.png" width = "400px" height = "600px">
+```
+:::
+:::
+
+
+## Ecological fallacy
+
+- State / county boundaries are typically artificial
+- We would expect that areas either side of a boundary will be more similar to areas at opposite ends inside the same polygons
+- The ecological fallacy can occur when we try to extrapolate from average relationships to individuals
+
+## More from Tim ? 
+
+## Data requirements for disaggregation regression
+
+```{=html}
+<object type="image/svg+xml" data="disag_data_types_path.svg"></object>
+```
+
+## Structure of disagapp
+
+- Steps in the analysis are termed *components* and navigated between via the top menu
+- All of the components need to be used 
+- Inside each component, there are several *modules* each providing different functionality
+- Modules are colour-coded depending on whether they either [have to be used]{style="color:#FE6100"}, [at least one must be used]{style="color:#648FFF"}, or are [optional]{style="color:#DC267F"}
+
+## General features
+
+- There is an introductory tour which shows the app features
+- If any errors occur a message will appear and also be shown in the logger
+- Guidance is available for each component and each module
+- You can save your analysis to a file and upload that later to continue
+- The analysis can be fully replicated outside the app by downloading an Rmarkdown file
+
+## Response component 
+
+- Loads the data to be modelled and plots it on the map and as a histogram
+- The *Example datasets* can be used to load example data
+- For your own data, the module to use depends on the current state of the data
+
+## Uploading response data
+
+- If you have shapefiles (`.dbf`, `.prj`, `.shp` and `.shx`) that contain both boundaries and the data then use *Upload shapefile*
+- If you have a shapefile with the boundaries, but the data in a spreadsheet (`.csv` or `.xlsx`) then use *Combine spreadsheet and shapefile*
+- If you have data in a spreadsheet (one column with area names and one with the data) then use *Upload spreadsheet*
+
+## Upload spreadsheet module
+
+- This module will download boundary data to be merged with the spreadsheet
+- Choose the country from the list
+- Then choose the administrative level from the dropdown menu
+- The meaning of these and the number available differs between countries, but higher numbers are smaller areas
+
+## Errors during uploads
+
+- If you upload a spreadsheet (using either module) the app will try to merge the data
+- If there are any rows in the spreadsheet which cannot be matched with boundaries an error will occur
+- The names of the problematic rows will be shown in the logger
+- Fix the names in your spreadsheet outside of the app and try again
+
+## Editing data
+
+- If you do not want to model all of the data uploaded, you can remove polygons using the *Edit data* module
+- Use the options on the left hand side of the map to draw either a rectangle or a polygon on the map
+- You can choose to either keep polygons inside or outside the shape drawn on the map
+- Some boundaries are overly complex for our needs and you can choose to simplify the geometry using the *Simplify polygon* module
+
+## Covariate data component
+
+- Covariates are used to predict the response data
+- These are all in the form of *rasters* made up of multiple cells
+- The cells vary in size but are typically around 1 km<sup>2<sup/>
+- Loading of the data occurs in the background, so you can move onto the next before one has been loaded
+- Once loaded, they will be plotted on the map
+
+## Accessibility covariates
+
+- Describe how accessible different areas are to cities and healthcare
+- Provided by the Malaria Atlas Project
+- Three options are available, either:
+  - Travel time to cities
+  - Motorised travel time to healthcare
+  - Walking only travel time to healthcare
+
+## Climatic covariates
+
+- Climatic variables affect many vector-borne diseases
+- The Worldclim dataset contains 17 different computed variables
+- You are most likely to need *Mean temperature* and *Total precipitation*
+- This module requires you to select the country or countries that your response data is from
+
+## Land use covariates
+
+- Land use can affect the presence of vectors and also provide a proxy to economic factors
+- Provided via the Copernicus Global Land Service
+- Data are available for 2015-2019
+- Land uses available are: bare ground, built up, crops, grass, moss/lichen, permanent water, seasonal water, shrubs, snow and trees
+
+## Nighttime light covariate
+
+- Provides an indication of economic activity
+- Provided by NASA’s Black Marble programme via Worldpop
+- Data are an annual average
+- Available from 2015-2023
+
+## Distance to water covariate
+
+- Some diseases may be influenced by water
+- The covariate is based off the European Space Agency's Worldcover product
+- Worldpop used the land cover classification to calculate the distance to surface water
+
+## Population density covariate
+
+- Some diseases are affected by population density
+- Provided by Worldpop
+- Population counts are converted to density (population / km<sup>2<sup/>)
+- Datasets are either constrained, where satellite imagery has been used to locate dwellings, resulting in areas with zero population
+
+## Upload covariates
+
+- You can also upload your own covariates
+- Click *Browse* and select `.tif` files
+- They will be converted to the WGS 84 coordinate system and cropped to your data
+
+## Aggregation data component
+
+- The aggregation raster acts as a weighting factor in the model that is analogous to an offset in a Poisson regression
+- For human epidemiology, this will normally be a population count 
+- Cells that have higher populations will be expected to have higher incidences
+
+## Population counts
+
+- Uses the same data source as the population density covariate module
+- Data are returned as raw counts instead of density
+- Using constrained data is advised as zero count cells can be discarded during model fitting 
+
+## Prepare data component
+
+- Several steps are required to prepare the data ready to fit the model
+- Generate a spatial mesh to use when fitting the model
+- Process the covariates into a consistent format
+- Optionally reduce the covariate resolution
+
+## Generate the spatial mesh
+
+- The spatial mesh simplifies model fitting by providing a finite set of nodes instead of a very large number of pixels
+- Dense meshes containing more nodes will produce better predictions but take longer to fit
+- Default settings are typically appropriate for initial model runs
+- Detailed instructions are provided in the module guidance
+- You can generate multiple meshes and then choose which one to use
+
+## Resampling covariates
+
+- The covariates all have slightly different resolutions and origins
+- We need to convert them so that all cells align in different covariates
+- Click *Prepare covariate summary* to generate a table of the original covariates
+- Select a covariate to use as a template for resampling and then click *Resample covariates*
+
+## Scaling covariates
+
+- The original covariates have very different ranges in values e.g. Mean temperature from 10-20 C but total precipitation from 500 to 2000 mm.
+- Left unaltered, it will be difficult to interpret the model coefficients
+- This module converts all the covariates to have a mean of 0 and a standard deviation of 1 which makes the coefficients easier to compare
+
+## Checking covariate correlations
+
+- If two covariates are highly correlated, there may be little advantage in including both in the model
+- You can generate a correlation matrix and choose to remove covariates
+
+## Reducing covariate resolution
+
+- With 1 km<sup>2<sup/> cells, depending on the area of the response data, it may take a long time to fit the model, or not be possible on the server.
+- You can reduce the resolution for an initial model run e.g. to 5 km<sup>2<sup/>
+- The original covariates are kept and you can use them for a final run
+
+## Switching between covariates
+
+- Once you have either scaled or reduced the resolution of the covariates, a menu appears below the map allowing you to switch between them 
+
+## Data size
+
+- Fitting disaggregation models is RAM intensive and the more cells there are in the covariates and the denser the mesh, the more RAM is required
+- The current server has 16 GB of RAM and can fit models containing c. 1 million cells
+- Unfortunately if you try to fit a model that is too large, R will crash and any data will be lost
+
+## Final preparation step
+
+- This step combines all the data together ready to fit the model
+- Select the column containing an ID for each polygon
+- Select the column containing the response data
+- You nearly always want to let this step handle any missing data
+
+## Fitting the model
+
+- The model family to use will depend on the form of the response data
+- For most epidemiological data where the response data consists of disease counts in each polygon, a Poisson model is appropriate
+- If the response data contains non-integers or negative values when a Gaussian model should be used
+- The default number of iterations (100) is normally suitable
+
+## Fitting the model
+
+- The IID effect is a non-spatial term that models overdispersion. It can account differences e.g. in data collection between polygons. When using a Gaussian model, this shouldn't be used as the Gaussian error term is analagous
+- The spatial field is similar to the IID effect but spatial. It can account for the effect of other covariates which we have not included in a model
+- You can choose to provide to provide your own priors by toggling the switch. The values in each box are the default values used by the model if you do not provide them
+
+## Assessing model fit
+
+- Once the model fitting is complete, three plots are produced
+- The first two show the model parameters, on the left hand side are the model parameters, on the right hand side are the covariate parameters
+- For the covariate parameters, the further from zero, the greater impact that covariate has on predicting the response data
+- The scatterplot shows the observed vs. predicted aggregated rate in each polygon. If an IID effect was included, the blue points are including the IID effect and the red points are excluding it
+
+## Producing predictions
+
+- By default, the model predicts rate (cases / person)
+- You can also choose to include cases and credible intervals
+- After running the module, you can download rasters of the predictions
+
+## Transferring the model to a new region
+
+- Once a model has been fitted, you can use it to make predictions in a different country
+- This module has to first download all the covariates for the new region and process them, so may be slow to run
+- Once complete, the covariates and predictions will be plotted on the map
+
+## Reproducing your analysis
+
+- A limitation of typical shiny apps are that they are not reproducible limiting their use for publication quality analyses
+- Disagapp contains various features to ensure that analyses performed can be reproduced in the future
+- You can download an Rmarkdown document in the *Session code* that when rerun on your computer will produce the exact same results
+- You can also download a copy of the covariates and when you do this, the Rmarkdown will be updated to replace the covariate modules with code which reads in the covariates from the file
+- You can also choose to download a file that will enable you to reproduce the exact environment (package versions) that the app is running on using `{renv}`
+
+## Running disagapp locally
+
+- Disagapp can also be run on your own computer
+- Install the package with `remotes::install_github("simon-smart88/disagapp)` 
+- Then run `disagapp::run_disagapp()` and it will open in your browser
+
+## Running your own example analysis
+
+- You have each been sent a URL to your own instance of the app
+- This will enable everyone to fit a model at the same time
+- These only have 8GB of RAM, so you will need to reduce the covariate resolution to *c.* 5 km<sup>2<sup/> 
+- Three datasets are available in the *Example datasets* module in the Response component.
+- If you select Madagascar, you will also have the option to load covariate and aggregation data automatically - you probably want to select 'No' today.
+
+
+## Feedback
+
+
+## Shinyscholar
+
+
+
+## Acknowledgements
+
+- Wellcome for funding
+- Anita Nandi for developing the disaggregation package
+- Wallace developers for creating the framework 
