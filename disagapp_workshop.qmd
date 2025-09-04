@@ -1,6 +1,6 @@
 ---
 title: "Disagapp Workshop"
-author: "Simon Smart"
+author: "Simon Smart and Tim Lucas"
 embed-resources: true
 format:
   revealjs: 
@@ -61,8 +61,10 @@ format:
 ## Data requirements for disaggregation regression
 
 ```{=html}
-<object type="image/svg+xml" data="disag_data_types_path.svg"></object>
+<object type="image/svg+xml" data="images/disag_data_types_path.svg"></object>
 ```
+
+## Demo of app
 
 ## Structure of disagapp
 
@@ -79,38 +81,25 @@ format:
 - You can save your analysis to a file and upload that later to continue
 - The analysis can be fully replicated outside the app by downloading an Rmarkdown file
 
+## Viewing results
+
+- Most modules modify the map in some way and this is shared amongst all the modules
+- The results tab only shows the results for the selected module
+- If a module doesn't produce results a placeholder is shown
+
+## Running your own example analysis
+
+- You have each been sent a URL to your own instance of the app
+- This will enable everyone to fit a model at the same time
+- These only have 16GB of RAM, so you will need to reduce the covariate resolution to *c.* 5 km<sup>2<sup/> 
+- Three datasets are available in the *Example datasets* module in the Response component.
+- If you select Madagascar, you will also have the option to load covariate and aggregation data automatically - you probably want to select 'No' today.
+
 ## Response component 
 
 - Loads the data to be modelled and plots it on the map and as a histogram
 - The *Example datasets* can be used to load example data
 - For your own data, the module to use depends on the current state of the data
-
-## Uploading response data
-
-- If you have shapefiles (`.dbf`, `.prj`, `.shp` and `.shx`) that contain both boundaries and the data then use *Upload shapefile*
-- If you have a shapefile with the boundaries, but the data in a spreadsheet (`.csv` or `.xlsx`) then use *Combine spreadsheet and shapefile*
-- If you have data in a spreadsheet (one column with area names and one with the data) then use *Upload spreadsheet*
-
-## Upload spreadsheet module
-
-- This module will download boundary data to be merged with the spreadsheet
-- Choose the country from the list
-- Then choose the administrative level from the dropdown menu
-- The meaning of these and the number available differs between countries, but higher numbers are smaller areas
-
-## Errors during uploads
-
-- If you upload a spreadsheet (using either module) the app will try to merge the data
-- If there are any rows in the spreadsheet which cannot be matched with boundaries an error will occur
-- The names of the problematic rows will be shown in the logger
-- Fix the names in your spreadsheet outside of the app and try again
-
-## Editing data
-
-- If you do not want to model all of the data uploaded, you can remove polygons using the *Edit data* module
-- Use the options on the left hand side of the map to draw either a rectangle or a polygon on the map
-- You can choose to either keep polygons inside or outside the shape drawn on the map
-- Some boundaries are overly complex for our needs and you can choose to simplify the geometry using the *Simplify polygon* module
 
 ## Covariate data component
 
@@ -160,14 +149,14 @@ format:
 
 - Some diseases are affected by population density
 - Provided by Worldpop
-- Population counts are converted to density (population / km<sup>2<sup/>)
-- Datasets are either constrained, where satellite imagery has been used to locate dwellings, resulting in areas with zero population
+- Population counts are converted to density (population / km<sup>2</sup> )
+- Datasets are either constrained, where satellite imagery has been used to locate dwellings, resulting in cells with zero population or unconstrained, which will result in cells with very low populations instead.
 
 ## Upload covariates
 
 - You can also upload your own covariates
 - Click *Browse* and select `.tif` files
-- They will be converted to the WGS 84 coordinate system and cropped to your data
+- They will be converted to the WGS 84 coordinate system and cropped to your response data
 
 ## Aggregation data component
 
@@ -177,9 +166,15 @@ format:
 
 ## Population counts
 
-- Uses the same data source as the population density covariate module
+- Uses the same data source as the *Population density* covariate module
 - Data are returned as raw counts instead of density
 - Using constrained data is advised as zero count cells can be discarded during model fitting 
+
+## Land use
+
+- For some datasets, land use could also be a valid aggregation raster
+- e.g. if our response data was a tree disease, then Tree land cover is analagous to human population count
+- Data is from the same source as the *Land use* covariate module, but only one layer can be selected
 
 ## Prepare data component
 
@@ -216,19 +211,27 @@ format:
 
 ## Reducing covariate resolution
 
-- With 1 km<sup>2<sup/> cells, depending on the area of the response data, it may take a long time to fit the model, or not be possible on the server.
-- You can reduce the resolution for an initial model run e.g. to 5 km<sup>2<sup/>
+- With 1 km<sup>2</sup> cells, depending on the area of the response data, it may take a long time to fit the model, or not be possible on the server.
+- You can reduce the resolution for an initial model run e.g. to 5 km<sup>2</sup>
 - The original covariates are kept and you can use them for a final run
 
 ## Switching between covariates
 
+::: columns
+::: {.column width="50%"}
 - Once you have either scaled or reduced the resolution of the covariates, a menu appears below the map allowing you to switch between them 
+:::
+::: {.column width="50%"}
+![](images/map_menu.png)
+:::
+:::
 
 ## Data size
 
 - Fitting disaggregation models is RAM intensive and the more cells there are in the covariates and the denser the mesh, the more RAM is required
 - The current server has 16 GB of RAM and can fit models containing c. 1 million cells
 - Unfortunately if you try to fit a model that is too large, R will crash and any data will be lost
+- To be on the safe side, save before trying to fit the model
 
 ## Final preparation step
 
@@ -253,7 +256,7 @@ format:
 ## Assessing model fit
 
 - Once the model fitting is complete, three plots are produced
-- The first two show the model parameters, on the left hand side are the model parameters, on the right hand side are the covariate parameters
+- The first two show the model parameters, on the right hand side are the covariate parameters, on the left hand side are the other parameters.
 - For the covariate parameters, the further from zero, the greater impact that covariate has on predicting the response data
 - The scatterplot shows the observed vs. predicted aggregated rate in each polygon. If an IID effect was included, the blue points are including the IID effect and the red points are excluding it
 
@@ -274,29 +277,68 @@ format:
 - A limitation of typical shiny apps are that they are not reproducible limiting their use for publication quality analyses
 - Disagapp contains various features to ensure that analyses performed can be reproduced in the future
 - You can download an Rmarkdown document in the *Session code* that when rerun on your computer will produce the exact same results
+- You can also produce a version of the Rmarkdown as either .pdf, .html or .docx
+
+## Reproducing your analysis
+
 - You can also download a copy of the covariates and when you do this, the Rmarkdown will be updated to replace the covariate modules with code which reads in the covariates from the file
 - You can also choose to download a file that will enable you to reproduce the exact environment (package versions) that the app is running on using `{renv}`
 
 ## Running disagapp locally
 
 - Disagapp can also be run on your own computer
-- Install the package with `remotes::install_github("simon-smart88/disagapp)` 
+- Install the package with `remotes::install_github("simon-smart88/disagapp, dependencies = TRUE")` 
 - Then run `disagapp::run_disagapp()` and it will open in your browser
+- You can load your saved files
 
-## Running your own example analysis
+## Running your analysis
 
-- You have each been sent a URL to your own instance of the app
-- This will enable everyone to fit a model at the same time
-- These only have 8GB of RAM, so you will need to reduce the covariate resolution to *c.* 5 km<sup>2<sup/> 
-- Three datasets are available in the *Example datasets* module in the Response component.
-- If you select Madagascar, you will also have the option to load covariate and aggregation data automatically - you probably want to select 'No' today.
+
+## Uploading response data
+
+- If you have shapefiles (`.dbf`, `.prj`, `.shp` and `.shx`) that contain both boundaries and the data then use *Upload shapefile*
+- If you have a shapefile with the boundaries, but the data in a spreadsheet (`.csv` or `.xlsx`) then use *Combine spreadsheet and shapefile*
+- If you have data in a spreadsheet (one column with area names and one with the data) then use *Upload spreadsheet*
+
+## Upload spreadsheet module
+
+- This module will download boundary data to be merged with the spreadsheet
+- Choose the country from the list
+- Then choose the administrative level from the dropdown menu
+- The meaning of these and the number available differs between countries, but higher numbers are smaller areas
+
+## Errors during uploads
+
+- If you upload a spreadsheet (using either module) the app will try to merge the data
+- If there are any rows in the spreadsheet which cannot be matched with boundaries an error will occur
+- The names of the problematic rows will be shown in the logger
+- Fix the names in your spreadsheet outside of the app and try again
+
+## Editing data
+
+- If you do not want to model all of the data uploaded, you can remove polygons using the *Edit data* module
+- Use the options on the left hand side of the map to draw either a rectangle or a polygon on the map
+- You can choose to either keep polygons inside or outside the shape drawn on the map
+- Some boundaries are overly complex for our needs and you can choose to simplify the geometry using the *Simplify polygon* module
 
 
 ## Feedback
 
+- Ease of use?
+- Other formats to upload?
+- Other covariates?
+- Please get in touch via ss1545@le.ac.uk or tim.lucas@le.ac.uk
+
 
 ## Shinyscholar
 
+- You can make your own apps like Disagapp via shinyscholar
+
+## Resources
+
+- leicester app
+- github incl docs
+- INLA mesh
 
 
 ## Acknowledgements
