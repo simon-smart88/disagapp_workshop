@@ -17,8 +17,8 @@ format:
 ## Overview
 
 - Introduction to disaggregation regression
-- Walkthrough of the functionality of Disagapp
-- Use the app to run an example analysis
+- Quick demo of the app
+- Interactive walkthrough using example data
 - Use your own data
 
 ## Disaggregation regression {.icons .smalltext}
@@ -91,7 +91,6 @@ format:
 
 - You have each been sent a URL to your own instance of the app
 - This will enable everyone to fit a model at the same time
-- These only have 16GB of RAM, so you will need to reduce the covariate resolution to *c.* 5 km<sup>2<sup/> 
 - Three datasets are available in the *Example datasets* module in the Response component.
 - If you select Madagascar, you will also have the option to load covariate and aggregation data automatically - you probably want to select 'No' today.
 
@@ -336,9 +335,10 @@ format:
 
 ## Resources
 
-- leicester app
-- github incl docs
-- INLA mesh
+- App: https://disagapp.le.ac.uk/
+- Source code: https://github.com/simon-smart88/disagapp
+- Documentation: https://simon-smart88.github.io/disagapp/ 
+- Slides: https://github.com/simon-smart88/disagapp_workshop 
 
 
 ## Acknowledgements
