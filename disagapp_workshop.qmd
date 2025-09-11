@@ -56,7 +56,36 @@ format:
 - We would expect that areas either side of a boundary will be more similar to areas at opposite ends inside the same polygons
 - The ecological fallacy can occur when we try to extrapolate from average relationships to individuals
 
-## More from Tim ? 
+## Poisson regression
+
+- y = exp(b0 + b1 X)
+
+## Disaggregation regression
+
+- y = exp(b0 + b1 X)
+
+- y = Σ exp(b0 + b1 X)
+
+
+## Disaggregation regression
+
+- y = exp(b0 + b1 X)
+
+- y = Σ exp(b0 + b1 X)
+```{=html}
+<img src="images/disaggregation-schematic.png" width = "700px" height = "170px">
+```
+
+
+## Random effects
+
+- Continuous spatial random effect (random field)
+
+- Discrete independent random effect (for overdispersion)
+
+- Both controlled by hyperparameters.
+
+
 
 ## Data requirements for disaggregation regression
 
