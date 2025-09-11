@@ -19,7 +19,7 @@ format:
 - Introduction to disaggregation regression
 - Quick demo of the app
 - Interactive walkthrough using example data
-- Use your own data
+- Run an analysis using your own data
 
 ## Disaggregation regression {.icons .smalltext}
 ::: columns
@@ -290,8 +290,10 @@ format:
 - Then run `disagapp::run_disagapp()` and it will open in your browser
 - You can load your saved files
 
-## Running your analysis
+## Running your own analysis
 
+- If you have bought your own data, now you can run your own analysis
+- If using USA data, downloading covariates will take a long time
 
 ## Uploading response data
 
@@ -320,7 +322,6 @@ format:
 - You can choose to either keep polygons inside or outside the shape drawn on the map
 - Some boundaries are overly complex for our needs and you can choose to simplify the geometry using the *Simplify polygon* module
 
-
 ## Feedback
 
 - Ease of use?
@@ -328,10 +329,18 @@ format:
 - Other covariates?
 - Please get in touch via ss1545@le.ac.uk or tim.lucas@le.ac.uk
 
-
 ## Shinyscholar
 
+::: columns
+::: {.column width="70%"}
 - You can make your own apps like Disagapp via shinyscholar
+- `install.packages("shinyscholar")`
+:::
+::: {.column width="30%"}
+<img src="images/ss_logo.png" width="auto" height="auto" align="right" alt="Hex logo of shinyscholar showing a black and white mortar cap">
+
+:::
+:::
 
 ## Resources
 
@@ -343,6 +352,16 @@ format:
 
 ## Acknowledgements
 
-- Wellcome for funding
-- Anita Nandi for developing the disaggregation package
-- Wallace developers for creating the framework 
+::: columns
+::: {.column width="70%"}
+-   Wellcome for funding
+-  Wallace developers for creating the framework 
+-  Anita Nandi for developing the disaggregation package
+:::
+::: {.column width="30%"}
+<div> 
+<img src="images/wellcome_logo.png" width="300" style = "display: block;" alt = "Wellcome logo">
+<img src="images/wallace_logo.png" width="300" style = "display: block;" alt = "Wallace hex logo">
+</div>
+:::
+:::
